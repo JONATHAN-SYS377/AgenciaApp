@@ -122,26 +122,27 @@ export const styles = StyleSheet.create({
     },
     ContenedorInput: {
         flex: 1,
-        padding: 2,
+        padding: 5,
         backgroundColor: 'transparent',
-        //position: 'absolute',
-        width: '95%',
+                width: '95%',
         justifyContent: 'center',
         alignItems: 'center',
+
 
     },
     Label: {
         width: '100%',
         color: '#fff',
-        fontSize: 20,
+        fontSize: 22,
         fontWeight: 'bold',
         paddingTop: 1,
         marginTop: 10,
-        marginLeft: 10,
+        marginLeft: 20,
+        paddingBottom:5
     },
     TextBox: {
         // width: '100%',
-        backgroundColor: 'white',
+        //backgroundColor: 'white',
         // fontSize: 20,
         padding: 5,
         marginTop: 5,
@@ -156,7 +157,7 @@ export const styles = StyleSheet.create({
         borderRadius: 15,
         marginBottom: 12,
         paddingHorizontal: 7,
-        color: '#000000',
+        color: '#fff',
         fontSize: 22,
         marginLeft: 10,
 
@@ -165,13 +166,14 @@ export const styles = StyleSheet.create({
     botonfecha: {
         padding: 10,
         marginBottom: 1,
-
         marginLeft: 0,
+        borderRadius:10,
 
     },
     radiobuton: {
         paddingRight: 20,
         paddingLeft: 12,
+        paddingBottom:10,
         flexDirection: 'row',
         alignItems: 'center',
 
@@ -182,7 +184,7 @@ export const styles = StyleSheet.create({
         paddingLeft: 0,
         flexDirection: 'column',
         // alignItems: 'center',
-        backgroundColor:'#fff',
+        backgroundColor:'#D3CDE4',
         borderRadius:10,
 
 
@@ -190,12 +192,13 @@ export const styles = StyleSheet.create({
     Labelradio: {
         color: '#fff',
         fontWeight:'800',
-        marginRight: 0,
+        marginRight: 1,
+        marginLeft: 15,
         fontSize: 20,
     },
     SizeImageSave:{
-        width: 80,
-        height: 80,
+        width: 70,
+        height: 70,
         borderRadius: 10,
         padding: 10,
         marginTop: 15,
@@ -205,18 +208,18 @@ export const styles = StyleSheet.create({
         backgroundColor:'#FFFFFF',
       },
       Modals: {
-        backgroundColor: '#BFBFBF',
+        backgroundColor: '#6750A4',
         position:'absolute'
       },
       modalContainer: {
-        bottom: -100,
+        bottom: 0,
         marginLeft: 10,
         marginRight: 10,
         width: '95%',
-        height: 560,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#37373D',
+        height: '100%',
+        // justifyContent: 'center',
+        // alignItems: 'center',
+        backgroundColor: '#6750A4',
         paddingLeft: 20,
         paddingRight: 20,
         paddingTop: 0,
@@ -239,4 +242,62 @@ export const styles = StyleSheet.create({
         fontSize: 17,
         fontWeight: 'bold',
       },
+      panelBtnRadio:{
+        width: '95%',
+        
+      },
+
+      Lista: {
+        // //backgroundColor: '#D8F9F1',
+        // borderRadius: 10,
+        // padding: 10,
+        // marginVertical: 8,
+        // marginHorizontal: 16,
+        backgroundColor: '#FFFFE0', // Color de fondo similar a las notas rápidas de Windows
+        padding: 16,
+        borderRadius: 8,
+        marginBottom: 16,
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+    
+      },
+      DatosLista: {
+        fontSize: 22,
+        fontStyle: 'italic',
+        color: '#000000',
+        lineHeight: 28,
+        borderBottomWidth: 1,
+        borderBottomColor: '#ccc',
+        borderLeftWidth: 1,
+        borderLeftColor: '#C96A58',
+        paddingBottom:6,
+        paddingLeft: 10,
+        paddingRight: 10,
+      },
+      SizeImage:{
+        width: 35,
+        height: 35
+      },
+      containerBoton: {
+        flex: 1,
+        flexDirection: 'row',
+        paddingTop: 5,
+        height:'auto',
+        alignItems: 'center',
+        justifyContent: 'space-around',
+      },
+      PanelPrincipal2:{
+        padding: 10,
+    flex: 1,
+    // flexDirection: "column",
+    // width: '100%',
+     backgroundColor: "#6750A4",
+      },
+
 });

@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react'
-import { View, Text, Button, Modal, TextInput, Alert, Pressable, Image, KeyboardAvoidingView, ImageBackground, TouchableOpacity, } from 'react-native';
+import { View, Text, Button, TextInput, Alert, Image, TouchableOpacity, } from 'react-native';
 import { styles } from '../Styles/styles';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useState } from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { format } from 'date-fns';
 import axios from 'axios';
-import { PaperProvider, Portal, RadioButton } from 'react-native-paper';
-import { Int32 } from 'react-native/Libraries/Types/CodegenTypes';
+import { RadioButton } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
 
 export const Registros = () => {
 
@@ -20,11 +20,11 @@ export const Registros = () => {
     TipoBisi: string;
     Precio: string;
   }
-
+  const navigation = useNavigation();
   const [txtId, SetTxtNumId] = useState('');
   const [txtCedula, SetTxtCedula] = useState('');
   const [txtNombreCliente, SetTxtNombreCliente] = useState('');
-  const [CheckSexo, SetCheckSexo] = React.useState('Masculino');
+  const [CheckSexo, SetCheckSexo] = React.useState('');
   const [TxtFechaReservacion, SetFechaReservacion] = useState('');
   const [TxtTipoBisi, SetTipoBisi] = useState('');
   const [Checkpaquete, SetCheckpaquete] = React.useState('');
@@ -36,10 +36,11 @@ export const Registros = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [editData, setEditData] = useState<IUser | null>(null);
 
-
+  
+  // =========== Metodo para asignar el valod de paquete al txt precio====================
   const handlePaqueteChange = (value: string) => {
     SetCheckpaquete(value);
-  
+
     // Asignar valor al campo TxtPrecio según la selección
     let precio = '';
     let paquete = '';
@@ -58,12 +59,14 @@ export const Registros = () => {
     }
     SetTxtPrecio(precio);
     SetTipoBisi(paquete);
-    console.log(TxtTipoBisi, 
-    TxtPrecio)
-    
+    console.log(TxtTipoBisi,
+      TxtPrecio)
+
   };
 
 
+
+  // ================ Metodo asignar los valores de los txt =====================
   const NumId = (text: string) => {
     SetTxtNumId(text);
   }
@@ -91,7 +94,9 @@ export const Registros = () => {
     setShowDatePicker(true);
   };
 
-  const handleDateChange = (event: any, selectedDate: Date) => {
+
+  // ================ Metodo para obtener la fecha y formatearla ============
+  const handleDateChange = (event: any, selectedDate?: Date) => {
     const currentDate = selectedDate || date;
     setShowDatePicker(false);
     setDate(currentDate);
@@ -100,10 +105,7 @@ export const Registros = () => {
     setSelectedDateText(formattedDate);
   };
 
-
-
-
-  // ================ Metodo para limpiar los campos =====================
+  // ============================metodo para limpiar los campos ========
   const limpiarCampos = () => {
     SetTxtNumId('');
     SetTxtCedula('');
@@ -114,21 +116,18 @@ export const Registros = () => {
     SetTxtPrecio('');
     SetCheckpaquete('');
   };
-  // =================================================================
+
 
 
   // ================ Alerta de nuevo registro =========================
-  const showAlert = () => {
+  const showAlert = (title: string, message: string) => {
     Alert.alert(
-      'Confirmación de Registro',
-      'Se a realizado un nuevo registro ',
-      [
-        { text: 'OK', onPress: () => { } },
-
-      ]
+      title,
+      message,
+      [{ text: 'OK', onPress: () => {} }]
     );
   };
-  // =================================================================
+
 
   // ============ Metodo para guardar en la base de datos=================
   const CreateGestor = async (
@@ -139,29 +138,45 @@ export const Registros = () => {
     TipoBisi: string,
     Precio: string,
   ) => {
-    axios.post('https://recordapi.azurewebsites.net/Recordatorio', {
+    // Validar que todos los campos no estén vacíos
+    if (
+      CedulaCliente.trim() === '' ||
+      NombreCliente.trim() === '' ||
+      Genero.trim() === '' ||
+      FechaReservacion.trim() === '' ||
+      TipoBisi.trim() === '' ||
+      Precio.trim() === ''
+    ) {
+      showAlert('Notificación del sistema','Todos los campos son obligatorios');
+      return;
+    }
+  
+    axios
+      .post(
+        'https://recordapi.azurewebsites.net/Recordatorio',
+        {
+          CedulaCliente: CedulaCliente,
+          NombreCliente: NombreCliente,
+          Genero: Genero,
+          FechaReservacion: FechaReservacion,
+          TipoBisi: TipoBisi,
+          Precio: Precio,
+        },
+        { headers: { 'Content-Type': 'application/json' } }
+      )
+      .then(Response => {
+        console.log(Response.data);
+        limpiarCampos();
+        showAlert('Mensaje de Confirmacion','La compra de su pauqete fue existosa');
+        GetGestor();
+        navigation.navigate('Home');
+      })
+      .catch(err => console.log(err));
+  };
+  
 
-      CedulaCliente: CedulaCliente,
-      NombreCliente: NombreCliente,
-      Genero: Genero,
-      FechaReservacion: FechaReservacion,
-      TipoBisi: TipoBisi,
-      Precio: Precio,
 
-    },
-      { headers: { 'Content-Type': 'application/json' } }).then(Response => {
-        console.log(Response.data)
-        limpiarCampos()
-        showAlert()
-        GetGestor()
-      }).catch(err => console.log(err));
-
-  }
-  // =================================================================
-
-
-
-
+  // ============ Peticion a la API para obtener los datos de la BD=================
   const GetGestor = () => {
     //192.168.1.115
     axios.get('https://recordapi.azurewebsites.net/Recordatorio').then(Response => {
@@ -169,6 +184,7 @@ export const Registros = () => {
     }).catch(err => console.log(err));
   }
 
+    // ============ Activacion de la peticion a la API =================
   useEffect(() => {
     GetGestor()
   }, [])
@@ -176,7 +192,10 @@ export const Registros = () => {
   return (
 
     < ScrollView style={styles.PanelPrincipalRegistro}>
-      {/* <ImageBackground style={{ height: '100%' }} source={require("../Resource/11.jpg")} /> */}
+      {/* <ImageBackground style={{ flex: 1,
+        padding: 5,
+        width: '95%',
+        }} source={require("../Resource/11.jpg")} /> */}
 
       <View style={styles.ContenedorInput}>
 
@@ -198,25 +217,27 @@ export const Registros = () => {
         >
         </TextInput>
 
+        <View style= {styles.panelBtnRadio}>
         <RadioButton.Group onValueChange={newValue => SetCheckSexo(newValue)} value={CheckSexo}>
           <Text style={styles.Label}>Genero</Text>
           <View style={styles.radiobuton}>
             <Text style={styles.Labelradio}>Masculino</Text>
-            <RadioButton value="Masculino" />
+            <RadioButton color='#fff' value="Masculino" />
             <Text style={styles.Labelradio}>Femenino</Text>
-            <RadioButton value="Femenino" />
+            <RadioButton  color='#fff' value="Femenino" />
           </View>
 
         </RadioButton.Group>
+        </View>
 
 
         <View style={styles.botonfecha}>
-          <Button title="Seleccionar fecha" onPress={showDateTimePicker} />
+          <Button  title="Seleccionar fecha" onPress={showDateTimePicker} />
 
           {showDatePicker && (
             <DateTimePicker
               value={date}
-              //mode="datetime"
+              mode="datetime"
               display="default"
               onChange={handleDateChange}
             />
@@ -243,17 +264,8 @@ export const Registros = () => {
             <RadioButton.Item label="Bike TransAlp 2023" value="Bike TransAlp 2023" />
             <RadioButton.Item label="Camino de Santiago España" value="Camino de Santiago España" />
           </View>
-          
+
         </RadioButton.Group>
-        <TextInput
-          style={styles.TextBox}
-          value={TxtTipoBisi}
-          onChangeText={SetTipoBisi}
-          inputMode='text'
-          id='Desarrollador'
-          editable={false}
-        >
-        </TextInput>
 
         <Text style={styles.Label}>Precio</Text>
         <TextInput
@@ -262,7 +274,7 @@ export const Registros = () => {
           onChangeText={SetTxtPrecio}
           inputMode='text'
           id='Desarrollador'
-          
+
         >
         </TextInput>
 
@@ -274,7 +286,7 @@ export const Registros = () => {
               txtNombreCliente,
               CheckSexo,
               selectedDateText,
-              TxtTipoBisi, // Utiliza el valor de Checkpaquete en lugar de TxtTipoBisi
+              Checkpaquete, // Utiliza el valor de Checkpaquete en lugar de TxtTipoBisi
               TxtPrecio
             )
           }

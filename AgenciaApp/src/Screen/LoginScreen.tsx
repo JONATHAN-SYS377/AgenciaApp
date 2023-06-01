@@ -19,9 +19,9 @@ export const LoginScreen = ({ navigation }: Props) => {
     const handleLogin = () => {
 
 
-        if (username === '') {
+        if (username === 'Admin') {
 
-            if (password === '') {
+            if (password === 'Admin123@') {
                 setUsername('');
                 setPassword('');
                 navigation.navigate('Home');
