@@ -1,0 +1,204 @@
+#
+# There is insufficient memory for the Java Runtime Environment to continue.
+# Native memory allocation (mmap) failed to map 67108864 bytes for Failed to commit area from 0x00000000fc000000 to 0x0000000100000000 of length 67108864.
+# Possible reasons:
+#   The system is out of physical RAM or swap space
+#   The process is running with CompressedOops enabled, and the Java Heap may be blocking the growth of the native heap
+# Possible solutions:
+#   Reduce memory load on the system
+#   Increase physical memory or swap space
+#   Check if swap backing store is full
+#   Decrease Java heap size (-Xmx/-Xms)
+#   Decrease number of Java threads
+#   Decrease Java thread stack sizes (-Xss)
+#   Set larger code cache with -XX:ReservedCodeCacheSize=
+# This output file may be truncated or incomplete.
+#
+#  Out of Memory Error (./src/hotspot/os/windows/os_windows.cpp:3386), pid=3744, tid=9256
+#
+# JRE version:  (11.0.18+10) (build )
+# Java VM: OpenJDK 64-Bit Server VM (11.0.18+10-LTS, mixed mode, sharing, tiered, compressed oops, g1 gc, windows-amd64)
+# No core dump will be written. Minidumps are not enabled by default on client versions of Windows
+#
+
+---------------  S U M M A R Y ------------
+
+Command Line: -Xmx64m -Xms64m -Dorg.gradle.appname=gradlew org.gradle.wrapper.GradleWrapperMain app:installDebug -PreactNativeDevServerPort=8081
+
+Host: AMD Ryzen 3 3200U with Radeon Vega Mobile Gfx  , 4 cores, 6G,  Windows 11 , 64 bit Build 22621 (10.0.22621.1485)
+Time: Thu Jun  1 00:08:24 2023 Hora estándar, América Central elapsed time: 0.241413 seconds (0d 0h 0m 0s)
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x000001c0d7935800):  JavaThread "Unknown thread" [_thread_in_vm, id=9256, stack(0x0000000128a00000,0x0000000128b00000)]
+
+Stack: [0x0000000128a00000,0x0000000128b00000]
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+V  [jvm.dll+0x62bf8a]
+V  [jvm.dll+0x7b8fb9]
+V  [jvm.dll+0x7ba6a8]
+V  [jvm.dll+0x7bad83]
+V  [jvm.dll+0x250248]
+V  [jvm.dll+0x62929a]
+V  [jvm.dll+0x61d855]
+V  [jvm.dll+0x30c32c]
+V  [jvm.dll+0x30c1b2]
+V  [jvm.dll+0x310ec6]
+V  [jvm.dll+0x356f0f]
+V  [jvm.dll+0x356940]
+V  [jvm.dll+0x2e9348]
+V  [jvm.dll+0x2ea4a6]
+V  [jvm.dll+0x792e07]
+V  [jvm.dll+0x79458f]
+V  [jvm.dll+0x363c69]
+V  [jvm.dll+0x775d70]
+V  [jvm.dll+0x3d297f]
+V  [jvm.dll+0x3d4d11]
+C  [jli.dll+0x5207]
+C  [ucrtbase.dll+0x29363]
+C  [KERNEL32.DLL+0x1269d]
+C  [ntdll.dll+0x5a9f8]
+
+
+---------------  P R O C E S S  ---------------
+
+Threads class SMR info:
+_java_thread_list=0x000001c0d56b3b80, length=0, elements={
+}
+
+Java Threads: ( => current thread )
+
+Other Threads:
+  0x000001c0d794d800 GCTaskThread "GC Thread#0" [stack: 0x0000000128b00000,0x0000000128c00000] [id=9200]
+  0x000001c0d7953000 ConcurrentGCThread "G1 Main Marker" [stack: 0x0000000128c00000,0x0000000128d00000] [id=26780]
+  0x000001c0d7955800 ConcurrentGCThread "G1 Conc#0" [stack: 0x0000000128d00000,0x0000000128e00000] [id=20488]
+
+[error occurred during error reporting (printing all threads), id 0xc0000005, EXCEPTION_ACCESS_VIOLATION (0xc0000005) at pc=0x00007ffceb698b17]
+
+VM state:not at safepoint (not fully initialized)
+
+VM Mutex/Monitor currently owned by a thread:  ([mutex/lock_event])
+[0x000001c0d792fef0] Heap_lock - owner thread: 0x000001c0d7935800
+
+Heap address: 0x00000000fc000000, size: 64 MB, Compressed Oops mode: Non-zero based: 0x00000000fc000000
+Narrow klass base: 0x0000000000000000, Narrow klass shift: 0
+
+GC Heap History (0 events):
+No events
+
+Deoptimization events (0 events):
+No events
+
+Classes redefined (0 events):
+No events
+
+Internal exceptions (0 events):
+No events
+
+Events (1 events):
+Event: 0.173 Loaded shared library C:\Program Files\Microsoft\jdk-11.0.18.10-hotspot\bin\zip.dll
+
+
+Dynamic libraries:
+0x00007ff77a130000 - 0x00007ff77a13d000 	C:\Program Files\Microsoft\jdk-11.0.18.10-hotspot\bin\java.exe
+0x00007ffd50590000 - 0x00007ffd507a4000 	C:\WINDOWS\SYSTEM32\ntdll.dll
+0x00007ffd4ef70000 - 0x00007ffd4f032000 	C:\WINDOWS\System32\KERNEL32.DLL
+0x00007ffd4dbe0000 - 0x00007ffd4df7c000 	C:\WINDOWS\System32\KERNELBASE.dll
+0x00007ffd4e000000 - 0x00007ffd4e111000 	C:\WINDOWS\System32\ucrtbase.dll
+0x00007ffd1b0c0000 - 0x00007ffd1b0d7000 	C:\Program Files\Microsoft\jdk-11.0.18.10-hotspot\bin\jli.dll
+0x00007ffd3ddf0000 - 0x00007ffd3de05000 	C:\Program Files\Microsoft\jdk-11.0.18.10-hotspot\bin\VCRUNTIME140.dll
+0x00007ffd4e540000 - 0x00007ffd4e6eb000 	C:\WINDOWS\System32\USER32.dll
+0x00007ffd3c700000 - 0x00007ffd3c98e000 	C:\WINDOWS\WinSxS\amd64_microsoft.windows.common-controls_6595b64144ccf1df_6.0.22621.608_none_a9444ca7c10bb01d\COMCTL32.dll
+0x00007ffd4dbb0000 - 0x00007ffd4dbd6000 	C:\WINDOWS\System32\win32u.dll
+0x00007ffd4e850000 - 0x00007ffd4e879000 	C:\WINDOWS\System32\GDI32.dll
+0x00007ffd50060000 - 0x00007ffd50107000 	C:\WINDOWS\System32\msvcrt.dll
+0x00007ffd4da90000 - 0x00007ffd4dba3000 	C:\WINDOWS\System32\gdi32full.dll
+0x00007ffd4e120000 - 0x00007ffd4e1ba000 	C:\WINDOWS\System32\msvcp_win.dll
+0x00007ffd4eec0000 - 0x00007ffd4eef1000 	C:\WINDOWS\System32\IMM32.DLL
+0x00000000772d0000 - 0x00000000772dc000 	C:\Program Files (x86)\360\Total Security\safemon\SafeWrapper.dll
+0x00007ffd4fbc0000 - 0x00007ffd4fc6e000 	C:\WINDOWS\System32\ADVAPI32.dll
+0x00007ffd4fc80000 - 0x00007ffd4fd24000 	C:\WINDOWS\System32\sechost.dll
+0x00007ffd4e3a0000 - 0x00007ffd4e4b7000 	C:\WINDOWS\System32\RPCRT4.dll
+0x00007ffd089d0000 - 0x00007ffd08a62000 	C:\Program Files (x86)\360\Total Security\safemon\libzdtp64.dll
+0x00007ffd4f040000 - 0x00007ffd4f830000 	C:\WINDOWS\System32\SHELL32.dll
+0x00007ffd4e4c0000 - 0x00007ffd4e51e000 	C:\WINDOWS\System32\SHLWAPI.dll
+0x00007ffd4d520000 - 0x00007ffd4d52a000 	C:\WINDOWS\SYSTEM32\VERSION.dll
+0x00007ffd005d0000 - 0x00007ffd0066b000 	C:\Program Files\Microsoft\jdk-11.0.18.10-hotspot\bin\msvcp140.dll
+0x00007ffceb3a0000 - 0x00007ffcebf32000 	C:\Program Files\Microsoft\jdk-11.0.18.10-hotspot\bin\server\jvm.dll
+0x00007ffd4fc70000 - 0x00007ffd4fc78000 	C:\WINDOWS\System32\PSAPI.DLL
+0x00007ffd18630000 - 0x00007ffd18639000 	C:\WINDOWS\SYSTEM32\WSOCK32.dll
+0x00007ffd45a80000 - 0x00007ffd45ab4000 	C:\WINDOWS\SYSTEM32\WINMM.dll
+0x00007ffd50180000 - 0x00007ffd501f1000 	C:\WINDOWS\System32\WS2_32.dll
+0x00007ffd4c970000 - 0x00007ffd4c988000 	C:\WINDOWS\SYSTEM32\kernel.appcore.dll
+0x00007ffd380f0000 - 0x00007ffd38100000 	C:\Program Files\Microsoft\jdk-11.0.18.10-hotspot\bin\verify.dll
+0x00007ffd41960000 - 0x00007ffd41b8e000 	C:\WINDOWS\SYSTEM32\DBGHELP.DLL
+0x00007ffd4f830000 - 0x00007ffd4fbb9000 	C:\WINDOWS\System32\combase.dll
+0x00007ffd4e770000 - 0x00007ffd4e847000 	C:\WINDOWS\System32\OLEAUT32.dll
+0x00007ffd3c990000 - 0x00007ffd3c9c2000 	C:\WINDOWS\SYSTEM32\dbgcore.DLL
+0x00007ffd4df80000 - 0x00007ffd4dffb000 	C:\WINDOWS\System32\bcryptPrimitives.dll
+0x00007ffd0e9e0000 - 0x00007ffd0ea08000 	C:\Program Files\Microsoft\jdk-11.0.18.10-hotspot\bin\java.dll
+0x00007ffd36ba0000 - 0x00007ffd36baa000 	C:\Program Files\Microsoft\jdk-11.0.18.10-hotspot\bin\jimage.dll
+0x00007ffd1b050000 - 0x00007ffd1b068000 	C:\Program Files\Microsoft\jdk-11.0.18.10-hotspot\bin\zip.dll
+
+dbghelp: loaded successfully - version: 4.0.5 - missing functions: none
+symbol engine: initialized successfully - sym options: 0x614 - pdb path: .;C:\Program Files\Microsoft\jdk-11.0.18.10-hotspot\bin;C:\WINDOWS\SYSTEM32;C:\WINDOWS\WinSxS\amd64_microsoft.windows.common-controls_6595b64144ccf1df_6.0.22621.608_none_a9444ca7c10bb01d;C:\Program Files (x86)\360\Total Security\safemon;C:\Program Files\Microsoft\jdk-11.0.18.10-hotspot\bin\server
+
+VM Arguments:
+jvm_args: -Xmx64m -Xms64m -Dorg.gradle.appname=gradlew 
+java_command: org.gradle.wrapper.GradleWrapperMain app:installDebug -PreactNativeDevServerPort=8081
+java_class_path (initial): D:\Operador Aplicaciones Informaticas\Portafolio\06-ASP.Net\Examen\AgenciaApp\android\\gradle\wrapper\gradle-wrapper.jar
+Launcher Type: SUN_STANDARD
+
+[Global flags]
+     intx CICompilerCount                          = 3                                         {product} {ergonomic}
+     uint ConcGCThreads                            = 1                                         {product} {ergonomic}
+     uint G1ConcRefinementThreads                  = 4                                         {product} {ergonomic}
+   size_t G1HeapRegionSize                         = 1048576                                   {product} {ergonomic}
+    uintx GCDrainStackTargetSize                   = 64                                        {product} {ergonomic}
+   size_t InitialHeapSize                          = 67108864                                  {product} {command line}
+   size_t MarkStackSize                            = 4194304                                   {product} {ergonomic}
+   size_t MaxHeapSize                              = 67108864                                  {product} {command line}
+   size_t MinHeapDeltaBytes                        = 1048576                                   {product} {ergonomic}
+    uintx NonNMethodCodeHeapSize                   = 5830732                                {pd product} {ergonomic}
+    uintx NonProfiledCodeHeapSize                  = 122913754                              {pd product} {ergonomic}
+    uintx ProfiledCodeHeapSize                     = 122913754                              {pd product} {ergonomic}
+    uintx ReservedCodeCacheSize                    = 251658240                              {pd product} {ergonomic}
+     bool SegmentedCodeCache                       = true                                      {product} {ergonomic}
+     bool UseCompressedClassPointers               = true                                 {lp64_product} {ergonomic}
+     bool UseCompressedOops                        = true                                 {lp64_product} {ergonomic}
+     bool UseG1GC                                  = true                                      {product} {ergonomic}
+     bool UseLargePagesIndividualAllocation        = false                                  {pd product} {ergonomic}
+
+Logging:
+Log output configuration:
+ #0: stdout all=warning uptime,level,tags
+ #1: stderr all=off uptime,level,tags
+
+Environment Variables:
+JAVA_HOME=C:\Program Files\Microsoft\jdk-11.0.18.10-hotspot\
+CLASSPATH=D:\Operador Aplicaciones Informaticas\Portafolio\06-ASP.Net\Examen\AgenciaApp\android\\gradle\wrapper\gradle-wrapper.jar
+PATH=D:\Operador Aplicaciones Informaticas\Portafolio\06-ASP.Net\Examen\AgenciaApp\android\node_modules\.bin;D:\Operador Aplicaciones Informaticas\Portafolio\06-ASP.Net\Examen\AgenciaApp\node_modules\.bin;D:\Operador Aplicaciones Informaticas\Portafolio\06-ASP.Net\Examen\node_modules\.bin;D:\Operador Aplicaciones Informaticas\Portafolio\06-ASP.Net\node_modules\.bin;D:\Operador Aplicaciones Informaticas\Portafolio\node_modules\.bin;D:\Operador Aplicaciones Informaticas\node_modules\.bin;D:\node_modules\.bin;C:\Program Files\nodejs;D:\Operador Aplicaciones Informaticas\Portafolio\06-ASP.Net\Examen\AgenciaApp\node_modules\.bin;D:\Operador Aplicaciones Informaticas\Portafolio\06-ASP.Net\Examen\AgenciaApp\node_modules\.bin;D:\Operador Aplicaciones Informaticas\Portafolio\06-ASP.Net\Examen\node_modules\.bin;D:\Operador Aplicaciones Informaticas\Portafolio\06-ASP.Net\node_modules\.bin;D:\Operador Aplicaciones Informaticas\Portafolio\node_modules\.bin;D:\Operador Aplicaciones Informaticas\node_modules\.bin;D:\node_modules\.bin;C:\Program Files\nodejs\node_modules\npm\node_modules\@npmcli\run-script\lib\node-gyp-bin;D:\Operador Aplicaciones Informaticas\Portafolio\06-ASP.Net\Examen\AgenciaApp\node_modules\.bin;D:\Operador Aplicaciones Informaticas\Portafolio\06-ASP.Net\Examen\node_modules\.bin;D:\Operador Aplicaciones Informaticas\Portafolio\06-ASP.Net\node_modules\.bin;D:\Operador Aplicaciones Informaticas\Portafolio\node_modules\.bin;D:\Operador Aplicaciones Informaticas\node_modules\.bin;D:\node_modules\.bin;C:\Program Files\nodejs;D:\Operador Aplicaciones Informaticas\Portafolio\06-ASP.Net\Examen\AgenciaApp\node_modules\react-native\scripts\node_modules\.bin;D:\Operador Aplicaciones Informaticas\Portafolio\06-ASP.Net\Examen\AgenciaApp\node_modules\react-native\node_modules\.bin;D:\Operador Aplicaciones Informaticas\Portafolio\06-ASP.Net\Examen\AgenciaApp\node_modules\node_modules\.bin;D:\Operador Aplicaciones Informaticas\Portafolio\06-ASP.Net\Examen\AgenciaApp\node_modules
+USERNAME=FSO Techno Systems
+OS=Windows_NT
+PROCESSOR_IDENTIFIER=AMD64 Family 23 Model 24 Stepping 1, AuthenticAMD
+TMP=C:\Users\jonas\AppData\Local\Temp
+TEMP=C:\Users\jonas\AppData\Local\Temp
+
+
+
+---------------  S Y S T E M  ---------------
+
+OS: Windows 11 , 64 bit Build 22621 (10.0.22621.1485)
+OS uptime: 3 days 6:41 hours
+Hyper-V role detected
+
+CPU:total 4 (initial active 4) (4 cores per cpu, 2 threads per core) family 23 model 24 stepping 1 microcode 0x0, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, avx, avx2, aes, clmul, mmxext, 3dnowpref, lzcnt, sse4a, ht, tsc, tscinvbit, tscinv, bmi1, bmi2, adx, sha, fma
+
+Memory: 4k page, system-wide physical 7060M (829M free)
+TotalPageFile size 28564M (AvailPageFile size 6M)
+current process WorkingSet (physical memory assigned to process): 11M, peak: 11M
+current process commit charge ("private bytes"): 51M, peak: 115M
+
+vm_info: OpenJDK 64-Bit Server VM (11.0.18+10-LTS) for windows-amd64 JRE (11.0.18+10-LTS), built on Jan 18 2023 15:56:47 by "MicrosoftCorporation" with MS VC++ 15.9 (VS2017)
+
+END.

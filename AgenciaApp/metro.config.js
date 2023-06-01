@@ -14,4 +14,9 @@ module.exports = {
       },
     }),
   },
+  resolver: {
+    extraNodeModules: {
+      axios: require.resolve('axios'),
+    },
+  },
 };

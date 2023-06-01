@@ -10,6 +10,7 @@ import com.facebook.react.defaults.DefaultReactNativeHost;
 import com.facebook.soloader.SoLoader;
 import java.util.List;
 
+
 public class MainApplication extends Application implements ReactApplication {
 
   private final ReactNativeHost mReactNativeHost =
@@ -18,7 +19,7 @@ public class MainApplication extends Application implements ReactApplication {
         public boolean getUseDeveloperSupport() {
           return BuildConfig.DEBUG;
         }
-
+       
         @Override
         protected List<ReactPackage> getPackages() {
           @SuppressWarnings("UnnecessaryLocalVariable")
