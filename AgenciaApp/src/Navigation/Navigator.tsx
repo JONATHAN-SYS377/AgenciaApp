@@ -11,7 +11,7 @@ const Stack = createStackNavigator();
 export const Navigator = () => {
   return (
     <PaperProvider>
-      <Stack.Navigator initialRouteName="LoginScreen" >
+      <Stack.Navigator  initialRouteName="LoginScreen" >
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Registros" component={Registros} />

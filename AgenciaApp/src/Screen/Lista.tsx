@@ -1,16 +1,15 @@
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { View, Text, Button, Modal, TextInput, Alert, Pressable, ScrollView, Image} from 'react-native';
+import { Button as ButtonNative, TextInput, Alert, Pressable, ScrollView, Image, ImageBackground } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 import { FlatList } from 'react-native';
 import { styles } from '../Styles/styles';
 import { RadioButton } from 'react-native-paper';
 import { StackScreenProps } from '@react-navigation/stack';
-import { SafeAreaView } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { format } from 'date-fns';
-
+import { View, NativeBaseProvider, Button, Input, Modal, Text, Icon, SearchIcon, FormControl, Radio, } from 'native-base';
 
 
 
@@ -24,6 +23,8 @@ export const Lista = () => {
     FechaReservacion: string;
     TipoBisi: string;
     Precio: string;
+    Tarjeta: string;
+    CVC: string;
   }
 
   const navigation = useNavigation();
@@ -42,13 +43,28 @@ export const Lista = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [editData, setEditData] = useState<IUser | null>(null);
   const [IDEliminar, setIDEliminar] = useState('');
+  const [Size, setSize] = React.useState('xl')
+  const [TxtTarjeta, SetTxtTarjeta] = useState('');
+  const [TxtCVC, SetTxtCVC ] = useState('');
+
+
+  const handleSizeClick = (newSize: React.SetStateAction<string>) => {
+    setSize(newSize);
+    setModalVisible(!modalVisible);
+  };
+
+
   // ================ Metodo asignar los valores de los txt =====================
   const NumId = (text: string) => {
     SetTxtNumId(text);
   }
 
   const Cedula = (text: string) => {
-    SetTxtCedula(text);
+    const numberRegex = /^[0-9]*$/
+    if (numberRegex.test(text)) {
+      SetTxtCedula(text);
+    }
+
   }
 
   const NombreCompleto = (text: string) => {
@@ -70,6 +86,27 @@ export const Lista = () => {
     setShowDatePicker(true);
   };
 
+  // Limitar la longitud a 16 caracteres
+  const Tarjeta = (text: string) => {
+    const numberRegex = /^[0-9]*$/
+    if (numberRegex.test(text)) {
+      SetTxtTarjeta(text);
+    }
+    if (text.length === 16) {
+      SetTxtTarjeta(text);
+    }
+  };
+
+  // Limitar la longitud a 3 caracteres
+  const CVC = (text: string) => {
+    const numberRegex = /^[0-9]*$/
+    if (numberRegex.test(text)) {
+      SetTxtCVC(text);
+    }
+    if (text.length === 3) {
+      SetTxtCVC(text);
+    }
+  };
 
   const ConfirmarEliminacion = (ID: string) => {
     Alert.alert(
@@ -170,6 +207,8 @@ export const Lista = () => {
     FechaReservacion: string,
     TipoBisi: string,
     Precio: string,
+    Tarjeta: string,
+    CVC: string,
   ) => {
     // Validar que todos los campos no estén vacíos
     if (
@@ -178,11 +217,13 @@ export const Lista = () => {
       Genero.trim() === '' ||
       FechaReservacion.trim() === '' ||
       TipoBisi.trim() === '' ||
-      Precio.trim() === ''
-    ) {
-      showAlert('Notificación del sistema', 'Todos los campos son obligatorios');
-      return;
-    }
+      Precio.trim() === '' ||
+      Tarjeta.trim() === '' ||
+      CVC.trim() === ''
+      ) {
+        showAlert('Notificación del sistema', 'Todos los campos son obligatorios');
+        return;
+      }
     axios.put(`https://recordapi.azurewebsites.net/Recordatorio/${ID}`, {
 
       CedulaCliente: CedulaCliente,
@@ -191,6 +232,8 @@ export const Lista = () => {
       FechaReservacion: FechaReservacion,
       TipoBisi: TipoBisi,
       Precio: Precio,
+      Tarjeta: Tarjeta,
+      CVC: CVC,
 
     },
       { headers: { 'Content-Type': 'application/json' } })
@@ -223,165 +266,263 @@ export const Lista = () => {
     SetTxtCedula(item.CedulaCliente);
     SetTxtNombreCliente(item.NombreCliente);
     SetCheckSexo(item.Genero);
-    SetFechaReservacion(item.FechaReservacion);
+    setSelectedDateText(item.FechaReservacion);
     SetCheckpaquete(item.TipoBisi);
     SetTxtPrecio(item.Precio);
 
   };
+
+
+
   return (
 
-    <SafeAreaView style={styles.PanelPrincipal2} >
-      <ScrollView onScroll={handleScroll}>
-        <FlatList
-          data={Datosvalue}
-          keyExtractor={(item: IUser) => item.ID}
-          renderItem={({ item }) => (
-            <View>
-              <View
-                style={styles.Lista}>
-                <Text style={styles.DatosLista}> Pedido #: {item.ID}</Text>
-                <Text style={styles.DatosLista}> Cedula: {item.CedulaCliente}</Text>
-                <Text style={styles.DatosLista}> Nombre Completo: {item.NombreCliente}</Text>
-                <Text style={styles.DatosLista}> Genero: {item.Genero}</Text>
-                <Text style={styles.DatosLista}> Fecha: {item.FechaReservacion}</Text>
-                <Text style={styles.DatosLista}> Paquete Adquirido: {item.TipoBisi}</Text>
-                <Text style={styles.DatosLista}> Precio: {item.Precio}</Text>
-                <View style={styles.containerBoton}>
-                  <TouchableOpacity onPress={() => openEditModal(item)}>
-                    <Image source={require('../Resource/edit_48px.png')} style={styles.SizeImage} />
-                    {/* <Text style={styles.ButtonEditar}>Editar</Text> */}
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={() => { ConfirmarEliminacion(item.ID) }}>
-                    <Image source={require('../Resource/waste_48px.png')} style={styles.SizeImage} />
-                  </TouchableOpacity>
-                </View>
+    <NativeBaseProvider>
+      <View backgroundColor={'#84776F'} width={'100%'}>
+        <ImageBackground style={{ width: '100%', height: '100%' }} source={require("../Resource/20.png")} />
+        <View flex={1} position="absolute" top={0} bottom={0} left={0} right={0} w="100%" padding={2}>
 
-              </View>
-            </View>
-          )}
-        />
-      </ScrollView>
-      <Modal
-        visible={modalVisible}
-        animationType='slide'
-        transparent={true}
-        style={styles.Modals}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        {/* Aquí puedes diseñar el contenido del modal */}
-        {editData && (
-
-          <ScrollView style={styles.modalContainer}>
-            <View style={styles.ContenedorInput}>
-
-              <Text style={styles.Label}>Numero de Cedula</Text>
-              <TextInput
-                value={txtCedula}
-                onChangeText={Cedula}
-                style={styles.TextBox}
-                inputMode='text'
-              >
-              </TextInput>
-
-              <Text style={styles.Label}>Nombre Completo</Text>
-              <TextInput
-                value={txtNombreCliente}
-                onChangeText={NombreCompleto}
-                style={styles.TextBox}
-                inputMode='text'
-              >
-              </TextInput>
-
-              <View style={styles.panelBtnRadio}>
-                <RadioButton.Group onValueChange={newValue => SetCheckSexo(newValue)} value={CheckSexo}>
-                  <Text style={styles.Label}>Genero</Text>
-                  <View style={styles.radiobuton}>
-                    <Text style={styles.Labelradio}>Masculino</Text>
-                    <RadioButton color='#fff' value="Masculino" />
-                    <Text style={styles.Labelradio}>Femenino</Text>
-                    <RadioButton color='#fff' value="Femenino" />
+          <FlatList
+            data={Datosvalue}
+            keyExtractor={(item: IUser) => item.ID}
+            renderItem={({ item }) => (
+              <View>
+                <View
+                  style={styles.Lista}>
+                  <Text style={styles.DatosLista}> Pedido #: {item.ID}</Text>
+                  <Text style={styles.DatosLista}> Cedula: {item.CedulaCliente}</Text>
+                  <Text style={styles.DatosLista}> Nombre Completo: {item.NombreCliente}</Text>
+                  <Text style={styles.DatosLista}> Genero: {item.Genero}</Text>
+                  <Text style={styles.DatosLista}> Fecha: {item.FechaReservacion}</Text>
+                  <Text style={styles.DatosLista}> Paquete Adquirido: {item.TipoBisi}</Text>
+                  <Text style={styles.DatosLista}> Precio: {item.Precio}</Text>
+                  <Text style={styles.DatosLista}> Tarjeta #: {item.Tarjeta}</Text>
+                  <Text style={styles.DatosLista}> CVC: {item.CVC}</Text>
+                  <View style={styles.containerBoton}>
+                    <TouchableOpacity onPress={() => openEditModal(item)}>
+                      <Image source={require('../Resource/edit_48px.png')} style={styles.SizeImage} />
+                      {/* <Text style={styles.ButtonEditar}>Editar</Text> */}
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => { ConfirmarEliminacion(item.ID) }}>
+                      <Image source={require('../Resource/waste_48px.png')} style={styles.SizeImage} />
+                    </TouchableOpacity>
                   </View>
 
-                </RadioButton.Group>
-              </View>
-
-
-              <View style={styles.botonfecha}>
-                <Button title="Seleccionar fecha" onPress={showDateTimePicker} />
-
-                {showDatePicker && (
-                  <DateTimePicker
-                    value={date}
-                    mode="datetime"
-                    display="default"
-                    onChange={handleDateChange}
-                  />
-                )}
-              </View>
-
-              <TextInput
-                style={styles.TextBox}
-                value={selectedDateText}
-                onChangeText={(text) => setSelectedDateText(text)}
-                inputMode='text'
-                id='Lanzamiento'
-                editable={false}
-              />
-
-
-
-
-              <RadioButton.Group onValueChange={handlePaqueteChange} value={Checkpaquete}>
-                <Text style={styles.Label}>Seleccione el paquete</Text>
-                <View style={styles.radiobuton2}>
-                  <RadioButton.Item label="La Ruta de Conquistadores" value="La Ruta de Conquistadores" />
-                  <RadioButton.Item label="Alpen Tour Trophy 2023" value="Alpen Tour Trophy 2023" />
-                  <RadioButton.Item label="Bike TransAlp 2023" value="Bike TransAlp 2023" />
-                  <RadioButton.Item label="Camino de Santiago España" value="Camino de Santiago España" />
                 </View>
+              </View>
+            )}
+          />
 
-              </RadioButton.Group>
+          <Modal
+            isOpen={modalVisible}
+            // animationType='slide'
+            // transparent={true}
+            //style={styles.Modals}
+            _backdrop={{
+              _dark: { bg: "coolGray.800" },
+              bg: "warmGray.50"
+            }}
+            onClose={() => setModalVisible(false)}
+            size={Size}
+          >
+            {editData && (
+              <Modal.Content>
+                <Modal.CloseButton />
 
-              <Text style={styles.Label}>Precio</Text>
-              <TextInput
-                style={styles.TextBox}
-                value={TxtPrecio}
-                onChangeText={SetTxtPrecio}
-                inputMode='text'
-                id='Desarrollador'
+                <Modal.Header>Actualizar Datos</Modal.Header>
 
-              >
-              </TextInput>
+                <Modal.Body>
+
+                  <FormControl>
+                    <Text color={'black'} fontSize={'lg'} marginBottom={1} marginTop={3}>Numero de Cedula *</Text>
+                    <Input variant="underlined"
+                      value={txtCedula}
+                      onChangeText={Cedula}
+                      color={'black'}
+                      //style={styles.TextBox}
+                      inputMode='numeric'
+                      size="xl"
+                    />
+                  </FormControl>
+
+                  <FormControl>
+                    <Text color={'black'} fontSize={'lg'} marginBottom={1} marginTop={3}>Numero de Cedula *</Text>
+                    <Input variant="underlined"
+                      value={txtNombreCliente}
+                      onChangeText={NombreCompleto}
+
+                      inputMode='text'
+                      size='xl'
+                    />
+                  </FormControl>
+
+                  <FormControl>
+                    <Text color={'black'} fontSize={'lg'} marginBottom={1} marginTop={3}>Genero *</Text>
+                    <Radio.Group name="myRadioGroup" onChange={newValue => SetCheckSexo(newValue)} value={CheckSexo}>
+                      {/* <Text style={styles.Label}>Genero</Text> */}
+                      <View style={styles.radiobuton}>
+                        <Radio value="Masculino" marginBottom={1} marginLeft={3} color={'amber.100'} size="lg" colorScheme="emerald">
+                          <Text color={'black'} marginRight={7} fontSize={'lg'} >
+                            Masculino
+                          </Text>
+                        </Radio>
+                        <Radio value="Femenino" marginBottom={1} color={'amber.100'} size="lg" colorScheme="emerald">
+                          <Text color={'black'} fontSize={'lg'} >
+                            Femenino
+                          </Text>
+                        </Radio>
+
+                      </View>
+
+                    </Radio.Group>
+                  </FormControl>
+
+                  <FormControl>
+
+                    <Button onPress={showDateTimePicker}>
+                      Seleccionar fecha
+                    </Button>
+
+                    {showDatePicker && (
+                      <DateTimePicker
+                        value={date}
+                       mode="datetime"
+                        display="default"
+                        onChange={handleDateChange}
+                        
+                      />
+                    )}
+                    <Input variant="underlined"
+                      //style={styles.TextBox}
+                      value={selectedDateText}
+                      onChangeText={(text) => setSelectedDateText(text)}
+                      inputMode='text'
+                      id='Lanzamiento'
+                      editable={false}
+                      size='xl'
+                    />
+
+                  </FormControl>
+
+                  <FormControl>
+                    <Radio.Group name="myRadioGroup" onChange={handlePaqueteChange} value={Checkpaquete}>
+
+                      <Text color={'black'} marginBottom={3} marginTop={3} fontSize={'lg'}>Seleccione el paquete que desea adquirir *</Text>
+                      <View style={styles.radiobuton2}>
 
 
-              <Pressable
-                onPress={() => {
-                  UpdateGestor(
-                    txtId,
-                    txtCedula,
-                    txtNombreCliente,
-                    CheckSexo,
-                    selectedDateText,
-                    Checkpaquete, // Utiliza el valor de Checkpaquete en lugar de TxtTipoBisi
-                    TxtPrecio
-                  )
-                  GetGestor()
-                  limpiarCampos()
-                  setModalVisible(false)
-                }}
-              >
-                <Image source={require('../Resource/save_close_48px.png')} style={styles.SizeImageSave} />
-              </Pressable>
-            </View>
-            
+                        <Radio marginBottom={1} color={'amber.100'} size="lg" colorScheme="emerald" value="La Ruta de Conquistadores" >
+                          <Text color={'black'} fontSize={'lg'} >
+                            La Ruta de Conquistadores
+                          </Text>
+                        </Radio>
+                        <Radio marginBottom={1} size="lg" colorScheme="emerald" value="Alpen Tour Trophy 2023" >
 
+                          <Text color={'black'} fontSize={'lg'} >
+                            Alpen Tour Trophy 2023
+                          </Text>
+                        </Radio>
+                        <Radio marginBottom={1} size="lg" colorScheme="emerald" value="Bike TransAlp 2023" >
 
+                          <Text color={'black'} fontSize={'lg'} >
+                            Bike TransAlp 2023
+                          </Text>
+                        </Radio>
+                        <Radio marginBottom={1} size="lg" colorScheme="emerald" value="Camino de Santiago España" >
 
-          </ScrollView>
-        )}
-      </Modal>
+                          <Text color={'black'} fontSize={'lg'} >
+                            Camino de Santiago España
+                          </Text>
+                        </Radio>
+                      </View>
 
-    </SafeAreaView>
+                    </Radio.Group>
+                  </FormControl>
+
+                  <FormControl>
+
+                    <Text color={'black'} fontSize={'lg'} marginBottom={1} marginTop={3} >Precio del paquete seleccionado *</Text>
+                    <Input variant="underlined"
+                      //style={styles.TextBox}
+                      value={TxtPrecio}
+                      onChangeText={SetTxtPrecio}
+                      inputMode='numeric'
+                      id='Desarrollador'
+                      size='xl'
+
+                    />
+                  </FormControl>
+
+                  <FormControl isRequired>
+
+                    <Text color={'black'} fontSize={'lg'} marginBottom={1} marginTop={3} >Ingrese los numeros de su tarjeta *</Text>
+
+                    <Input variant="underlined"
+                      //style={styles.TextBox}
+                      value={TxtTarjeta}
+                      onChangeText={SetTxtTarjeta}
+                      inputMode='numeric'
+                      id='Desarrollador'
+                      size='xl'
+                      maxLength={16}
+                      color={'black'}
+
+                    />
+                  </FormControl>
+
+                  <FormControl>
+
+                    <Text color={'black'} fontSize={'lg'} marginBottom={1} marginTop={3}>CVC *</Text>
+
+                    <Input variant="underlined"
+                      //style={styles.TextBox}
+                      value={TxtCVC}
+                      onChangeText={SetTxtCVC}
+                      inputMode='numeric'
+                      id='Desarrollador'
+                      size='xl'
+                      maxLength={3}
+                      color={'black'}
+
+                    />
+                  </FormControl>
+
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button.Group>
+                    <Button variant={'ghost'} colorScheme={'secondary'} onPress={() => { setModalVisible(false) }}>
+                      Cancelar
+                    </Button>
+                    <Button onPress={() => {
+                      UpdateGestor(
+                        txtId,
+                        txtCedula,
+                        txtNombreCliente,
+                        CheckSexo,
+                        selectedDateText,
+                        Checkpaquete, // Utiliza el valor de Checkpaquete en lugar de TxtTipoBisi
+                        TxtPrecio,
+                        TxtTarjeta,
+                        TxtCVC,
+                      )
+                      GetGestor()
+                      limpiarCampos()
+                      setModalVisible(false)
+                    }}>
+                      Guardar
+                    </Button>
+                  </Button.Group>
+
+                </Modal.Footer>
+
+              </Modal.Content>
+
+            )}
+          </Modal>
+
+        </View>
+      </View>
+    </NativeBaseProvider>
+
 
   )
 }
