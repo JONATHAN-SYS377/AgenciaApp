@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { Button as ButtonNative, TextInput, Alert, Pressable, ScrollView, Image, ImageBackground } from 'react-native';
+import { Button as ButtonNative, TextInput,  Pressable,Alert, ScrollView, Image, ImageBackground } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 import { FlatList } from 'react-native';
 import { styles } from '../Styles/styles';
@@ -10,10 +10,11 @@ import { StackScreenProps } from '@react-navigation/stack';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { format } from 'date-fns';
 import { View, NativeBaseProvider, Button, Input, Modal, Text, Icon, SearchIcon, FormControl, Radio, } from 'native-base';
+import * as Animatable from 'react-native-animatable';
 
 
-
-export const Lista = () => {
+interface Props extends StackScreenProps<any, any> { };
+export const Lista = ({ navigation }: Props) => {
 
   interface IUser {
     ID: string;
@@ -27,7 +28,6 @@ export const Lista = () => {
     CVC: string;
   }
 
-  const navigation = useNavigation();
   const [txtId, SetTxtNumId] = useState('');
   const [txtCedula, SetTxtCedula] = useState('');
   const [txtNombreCliente, SetTxtNombreCliente] = useState('');
@@ -45,7 +45,7 @@ export const Lista = () => {
   const [IDEliminar, setIDEliminar] = useState('');
   const [Size, setSize] = React.useState('xl')
   const [TxtTarjeta, SetTxtTarjeta] = useState('');
-  const [TxtCVC, SetTxtCVC ] = useState('');
+  const [TxtCVC, SetTxtCVC] = useState('');
 
 
   const handleSizeClick = (newSize: React.SetStateAction<string>) => {
@@ -120,9 +120,11 @@ export const Lista = () => {
   };
 
   const showAlert = (title: string, message: string) => {
-    Alert.alert(
+    
+    Alert.alert  (
       title,
       message,
+
       [{ text: 'OK', onPress: () => { } }]
     );
   };
@@ -138,31 +140,87 @@ export const Lista = () => {
   };
 
   // =========== Metodo para asignar el valod de paquete al txt precio====================
-  const handlePaqueteChange = (value: string) => {
-    SetCheckpaquete(value);
+  // const handlePaqueteChange = (value: string) => {
+  //   SetCheckpaquete(value);
 
-    // Asignar valor al campo TxtPrecio según la selección
-    let precio = '';
-    let paquete = '';
-    if (value === 'La Ruta de Conquistadores') {
-      precio = '450';
-      paquete = 'La Ruta de Conquistadores';
-    } else if (value === 'Alpen Tour Trophy 2023') {
-      precio = '3 999';
-      paquete = 'La Alpen Tour Trophy 2023';
-    } else if (value === 'Bike TransAlp 2023') {
-      precio = '5 209';
-      paquete = 'Bike TransAlp 2023';
-    } else if (value === 'Camino de Santiago España') {
-      precio = '4 999';
-      paquete = 'Camino de Santiago España';
+  //   // Asignar valor al campo TxtPrecio según la selección
+  //   let precio = '';
+  //   let paquete = '';
+  //   if (value === 'La Ruta de Conquistadores') {
+  //     precio = '450';
+  //     paquete = 'La Ruta de Conquistadores';
+  //   } else if (value === 'Alpen Tour Trophy 2023') {
+  //     precio = '3 999';
+  //     paquete = 'La Alpen Tour Trophy 2023';
+  //   } else if (value === 'Bike TransAlp 2023') {
+  //     precio = '5 209';
+  //     paquete = 'Bike TransAlp 2023';
+  //   } else if (value === 'Camino de Santiago España') {
+  //     precio = '4 999';
+  //     paquete = 'Camino de Santiago España';
+  //   }
+  //   SetTxtPrecio(precio);
+  //   SetTipoBisi(paquete);
+  //   console.log(TxtTipoBisi,
+  //     TxtPrecio)
+
+  // };
+  const handlePaqueteChange = (newValue: string) => {
+    SetCheckpaquete(newValue);
+    const selectedPackage = Packages.find((item) => item.value === newValue);
+    if (selectedPackage) {
+      const packagePrice = Number(selectedPackage.price.replace(/\s/g, '')); // Eliminar espacios en blanco
+      const storedPrice = Number(editData?.Precio.replace(/\s/g, '')); // Eliminar espacios en blanco
+
+      if (packagePrice === storedPrice) {
+        Alert.alert(
+          'Cambio de paquete',
+          'Ya tienes seleccionado ese paquete.',
+          [
+            { text: 'Aceptar', style: 'cancel' }
+          ]
+        );
+      }
+      else {
+        console.log('no entro a las condicionales');
+        SetTxtPrecio(selectedPackage.price);
+      }
+
+      if (packagePrice > storedPrice) {
+        const difference = packagePrice - storedPrice;
+        Alert.alert(
+          'Cambio de paquete',
+          `Para cambiar de paquete debes pagar una diferencia de $ ${difference} más.`,
+          [
+            { text: 'Cancelar', style: 'cancel' },
+            { text: 'Aceptar', onPress: () => SetTxtPrecio(selectedPackage.price)}
+            
+          ]
+        );
+      }
+      if (packagePrice < storedPrice) {
+        const difference = storedPrice - packagePrice;
+        Alert.alert(
+          'Cambio de paquete',
+          `Se te reembolsará $ ${difference} como diferencia de precio. Precio del nuevo paquete: $ ${selectedPackage.price}`,
+          [
+            { text: 'Cancelar', style: 'cancel' },
+            { text: 'Aceptar', onPress: () => SetTxtPrecio(selectedPackage.price) }
+            
+          ]
+        );
+
+      }
+      
     }
-    SetTxtPrecio(precio);
-    SetTipoBisi(paquete);
-    console.log(TxtTipoBisi,
-      TxtPrecio)
-
   };
+
+  const Packages = [
+    { label: 'La Ruta de Conquistadores', value: 'La Ruta de Conquistadores', price: '450' },
+    { label: 'Alpen Tour Trophy 2023', value: 'Alpen Tour Trophy 2023', price: '3 999' },
+    { label: 'Bike TransAlp 2023', value: 'Bike TransAlp 2023', price: '5 209' },
+    { label: 'Camino de Santiago España', value: 'Camino de Santiago España', price: '4 299' }
+  ];
 
   // =========== metodo para Elimiar el dato de la BD  =============================
   const Eliminar = (ID: string) => {
@@ -220,28 +278,34 @@ export const Lista = () => {
       Precio.trim() === '' ||
       Tarjeta.trim() === '' ||
       CVC.trim() === ''
-      ) {
-        showAlert('Notificación del sistema', 'Todos los campos son obligatorios');
-        return;
-      }
-    axios.put(`https://recordapi.azurewebsites.net/Recordatorio/${ID}`, {
+    ) {
+      showAlert('Notificación del sistema', 'Todos los campos son obligatorios');
+      return;
+      setModalVisible(true);
+    } else {
+      axios.put(`https://recordapi.azurewebsites.net/Recordatorio/${ID}`, {
 
-      CedulaCliente: CedulaCliente,
-      NombreCliente: NombreCliente,
-      Genero: Genero,
-      FechaReservacion: FechaReservacion,
-      TipoBisi: TipoBisi,
-      Precio: Precio,
-      Tarjeta: Tarjeta,
-      CVC: CVC,
+        CedulaCliente: CedulaCliente,
+        NombreCliente: NombreCliente,
+        Genero: Genero,
+        FechaReservacion: FechaReservacion,
+        TipoBisi: TipoBisi,
+        Precio: Precio,
+        Tarjeta: '',
+        CVC: '',
 
-    },
-      { headers: { 'Content-Type': 'application/json' } })
-      .then(Response => {
-        limpiarCampos();
-        showAlert('Mensaje de Confirmacion', 'Actualizacion del paquete Exitoso');
-        GetGestor();
-      }).catch(err => console.log(err));
+      },
+        { headers: { 'Content-Type': 'application/json' } })
+        .then(Response => {
+
+          showAlert('Mensaje de Confirmacion', 'Actualizacion del paquete Exitoso');
+          GetGestor()
+          limpiarCampos()
+          setModalVisible(false)
+
+        }).catch(err => console.log(err));
+    }
+
 
   };
   //--------  Peticion Delete para eliminar los datos de la BD --------
@@ -272,7 +336,7 @@ export const Lista = () => {
 
   };
 
-
+  
 
   return (
 
@@ -280,43 +344,37 @@ export const Lista = () => {
       <View backgroundColor={'#84776F'} width={'100%'}>
         <ImageBackground style={{ width: '100%', height: '100%' }} source={require("../Resource/20.png")} />
         <View flex={1} position="absolute" top={0} bottom={0} left={0} right={0} w="100%" padding={2}>
-
           <FlatList
             data={Datosvalue}
-            keyExtractor={(item: IUser) => item.ID}
             renderItem={({ item }) => (
-              <View>
-                <View
-                  style={styles.Lista}>
-                  <Text style={styles.DatosLista}> Pedido #: {item.ID}</Text>
-                  <Text style={styles.DatosLista}> Cedula: {item.CedulaCliente}</Text>
-                  <Text style={styles.DatosLista}> Nombre Completo: {item.NombreCliente}</Text>
-                  <Text style={styles.DatosLista}> Genero: {item.Genero}</Text>
-                  <Text style={styles.DatosLista}> Fecha: {item.FechaReservacion}</Text>
-                  <Text style={styles.DatosLista}> Paquete Adquirido: {item.TipoBisi}</Text>
-                  <Text style={styles.DatosLista}> Precio: {item.Precio}</Text>
-                  <Text style={styles.DatosLista}> Tarjeta #: {item.Tarjeta}</Text>
-                  <Text style={styles.DatosLista}> CVC: {item.CVC}</Text>
-                  <View style={styles.containerBoton}>
-                    <TouchableOpacity onPress={() => openEditModal(item)}>
-                      <Image source={require('../Resource/edit_48px.png')} style={styles.SizeImage} />
-                      {/* <Text style={styles.ButtonEditar}>Editar</Text> */}
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => { ConfirmarEliminacion(item.ID) }}>
-                      <Image source={require('../Resource/waste_48px.png')} style={styles.SizeImage} />
-                    </TouchableOpacity>
-                  </View>
-
+              <View style={styles.Lista}>
+                <Text color={'black'} style={styles.DatosLista}>Pedido # {item.ID}</Text>
+                <Text color={'black'} style={styles.DatosLista}>Cedula: {item.CedulaCliente}</Text>
+                <Text color={'black'} style={styles.DatosLista}>Nombre Completo:  {item.NombreCliente}</Text>
+                <Text color={'black'} style={styles.DatosLista}>Genero: {item.Genero}</Text>
+                <Text color={'black'} style={styles.DatosLista}>Fecha: {item.FechaReservacion}</Text>
+                <Text color={'black'} style={styles.DatosLista}>Paquete Adquirido: {item.TipoBisi}</Text>
+                <Text color={'black'} style={styles.DatosLista}>Precio: ${item.Precio}</Text>
+                {/* <Text color={'black'} style={styles.DatosLista}>Tarjeta #: {item.Tarjeta}</Text>
+                <Text color={'black'} style={styles.DatosLista}>CVC: {item.CVC}</Text> */}
+                <View style={styles.containerBoton}>
+                  <TouchableOpacity onPress={() => openEditModal(item)}>
+                    <Image source={require('../Resource/edit_48px.png')} style={styles.SizeImage} />
+                    {/* <Text style={styles.ButtonEditar}>Editar</Text> */}
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => { ConfirmarEliminacion(item.ID) }}>
+                    <Image source={require('../Resource/waste_48px.png')} style={styles.SizeImage} />
+                  </TouchableOpacity>
                 </View>
               </View>
             )}
+            keyExtractor={(item) => item.ID}
           />
+          
+
 
           <Modal
             isOpen={modalVisible}
-            // animationType='slide'
-            // transparent={true}
-            //style={styles.Modals}
             _backdrop={{
               _dark: { bg: "coolGray.800" },
               bg: "warmGray.50"
@@ -385,10 +443,10 @@ export const Lista = () => {
                     {showDatePicker && (
                       <DateTimePicker
                         value={date}
-                       mode="datetime"
+                        mode="datetime"
                         display="default"
                         onChange={handleDateChange}
-                        
+
                       />
                     )}
                     <Input variant="underlined"
@@ -403,7 +461,7 @@ export const Lista = () => {
 
                   </FormControl>
 
-                  <FormControl>
+                  {/* <FormControl>
                     <Radio.Group name="myRadioGroup" onChange={handlePaqueteChange} value={Checkpaquete}>
 
                       <Text color={'black'} marginBottom={3} marginTop={3} fontSize={'lg'}>Seleccione el paquete que desea adquirir *</Text>
@@ -436,14 +494,24 @@ export const Lista = () => {
                       </View>
 
                     </Radio.Group>
+                  </FormControl> */}
+
+                  <FormControl>
+                    <Text color={'black'} fontSize={'lg'} marginBottom={1} marginTop={3}>Seleccione el paquete por el que deseas cambiar</Text>
+                    <Radio.Group name="packageGroup" onChange={handlePaqueteChange} value={Checkpaquete}>
+                      {Packages.map((item, index) => (
+                        <Radio value={item.value} my={1} key={index} marginBottom={1} size="lg" colorScheme="emerald">
+                          {item.label}
+                        </Radio>
+                      ))}
+                    </Radio.Group>
                   </FormControl>
 
                   <FormControl>
-
                     <Text color={'black'} fontSize={'lg'} marginBottom={1} marginTop={3} >Precio del paquete seleccionado *</Text>
                     <Input variant="underlined"
                       //style={styles.TextBox}
-                      value={TxtPrecio}
+                      value={'$ '+TxtPrecio}
                       onChangeText={SetTxtPrecio}
                       inputMode='numeric'
                       id='Desarrollador'
@@ -500,13 +568,11 @@ export const Lista = () => {
                         CheckSexo,
                         selectedDateText,
                         Checkpaquete, // Utiliza el valor de Checkpaquete en lugar de TxtTipoBisi
-                        TxtPrecio,
+                        TxtPrecio.replace('$',''),
                         TxtTarjeta,
                         TxtCVC,
                       )
-                      GetGestor()
-                      limpiarCampos()
-                      setModalVisible(false)
+
                     }}>
                       Guardar
                     </Button>

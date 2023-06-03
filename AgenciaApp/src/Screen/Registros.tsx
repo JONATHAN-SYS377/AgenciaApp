@@ -201,8 +201,8 @@ export const Registros = ({ navigation }: Props) => {
           FechaReservacion: FechaReservacion,
           TipoBisi: TipoBisi,
           Precio: Precio,
-          Tarjeta: Tarjeta,
-          CVC: CVC,
+          Tarjeta: '',
+          CVC: '',
         },
         { headers: { 'Content-Type': 'application/json' } }
       )
@@ -255,7 +255,7 @@ export const Registros = ({ navigation }: Props) => {
             </FormControl>
 
             <FormControl isRequired>
-            <Text color={'white'} fontSize={'lg'} marginBottom={1} marginTop={3}>Numero de Cedula *</Text>
+            <Text color={'white'} fontSize={'lg'} marginBottom={1} marginTop={3}>Nombre Completo *</Text>
               <Input variant="underlined"
                 value={txtNombreCliente}
                 onChangeText={NombreCompleto}
@@ -345,10 +345,9 @@ export const Registros = ({ navigation }: Props) => {
             <FormControl isRequired>
 
               <Text color={'white'} fontSize={'lg'} marginBottom={1} marginTop={3} >Precio del paquete seleccionado *</Text>
-
               <Input variant="underlined"
                 //style={styles.TextBox}
-                value={TxtPrecio}
+                value={'$ '+TxtPrecio}
                 onChangeText={SetTxtPrecio}
                 inputMode='numeric'
                 id='Desarrollador'
@@ -404,7 +403,7 @@ export const Registros = ({ navigation }: Props) => {
                     CheckSexo,
                     selectedDateText,
                     Checkpaquete, // Utiliza el valor de Checkpaquete en lugar de TxtTipoBisi
-                    TxtPrecio,
+                    TxtPrecio.replace('$',''),
                     TxtTarjeta,
                     TxtCVC,
                   )

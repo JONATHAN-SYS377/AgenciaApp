@@ -12,7 +12,7 @@ export const Navigator = () => {
   return (
     <PaperProvider>
       <Stack.Navigator  initialRouteName="LoginScreen" >
-        <Stack.Screen name="LoginScreen" component={LoginScreen} />
+        <Stack.Screen name="Bienvenido" component={LoginScreen} />
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Registros" component={Registros} />
         <Stack.Screen name="Lista" component={Lista} />
