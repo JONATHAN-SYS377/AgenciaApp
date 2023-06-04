@@ -14,6 +14,7 @@ import { NativeBaseProvider, View, Button, Input, Modal, Text, SearchIcon, FormC
 interface Props extends StackScreenProps<any, any> { };
 export const Registros = ({ navigation }: Props) => {
 
+  //============   Creacion de la interface para almacenar datos ============   
   interface IUser {
     ID: string;
     CedulaCliente: string;
@@ -25,7 +26,8 @@ export const Registros = ({ navigation }: Props) => {
     Tarjeta: string;
     CVC: string;
   }
-  // const navigation = useNavigation();
+
+  //============   Todas las constances que utilzare para la APP =============
   const [txtId, SetTxtNumId] = useState('');
   const [txtCedula, SetTxtCedula] = useState('');
   const [txtNombreCliente, SetTxtNombreCliente] = useState('');
@@ -42,8 +44,6 @@ export const Registros = ({ navigation }: Props) => {
   const [editData, setEditData] = useState<IUser | null>(null);
   const [TxtTarjeta, setTxtTarjeta] = useState('');
   const [TxtCVC, setTxtCVC] = useState('');
-
-
 
   // =========== Metodo para asignar el valod de paquete al txt precio====================
   const handlePaqueteChange = (value: string) => {
@@ -72,13 +72,12 @@ export const Registros = ({ navigation }: Props) => {
 
   };
 
-
-
   // ================ Metodo asignar los valores de los txt =====================
   const NumId = (text: string) => {
     SetTxtNumId(text);
   }
 
+  //============   metodo para validar los datos que se ingresan en la cedula =================
   const Cedula = (text: string) => {
     const numberRegex = /^[0-9]*$/
     if (numberRegex.test(text)) {
@@ -87,6 +86,7 @@ export const Registros = ({ navigation }: Props) => {
 
   }
 
+  //============   metodo para capturar  los datos de nombre =================
   const NombreCompleto = (text: string) => {
 
     SetTxtNombreCliente(text);
@@ -94,17 +94,12 @@ export const Registros = ({ navigation }: Props) => {
 
   }
 
-  const FechaReservacion = (text: string) => {
-    SetFechaReservacion(text);
-  }
-
-  const TipoBisi = (text: string) => {
-    SetTipoBisi(text);
-  }
-
+  //============   metodo para capturar el precio del paquete ==================
   const Precioo = (text: string) => {
     SetTxtPrecio(text);
   }
+
+  //============   metodo para mostrar el DateTimePicker =================================
   const showDateTimePicker = () => {
     setShowDatePicker(true);
   };
@@ -120,7 +115,7 @@ export const Registros = ({ navigation }: Props) => {
     }
   };
 
-  // Limitar la longitud a 3 caracteres
+  //============  Limitar la longitud a 16 caracteres ============ 
   const CVC = (text: string) => {
     const numberRegex = /^[0-9]*$/
     if (numberRegex.test(text)) {
@@ -153,8 +148,6 @@ export const Registros = ({ navigation }: Props) => {
     SetCheckpaquete('');
   };
 
-
-
   // ================ Alerta de nuevo registro =========================
   const showAlert = (title: string, message: string) => {
     Alert.alert(
@@ -163,7 +156,6 @@ export const Registros = ({ navigation }: Props) => {
       [{ text: 'OK', onPress: () => { } }]
     );
   };
-
 
   // ============ Metodo para guardar en la base de datos=================
   const CreateGestor = async (
@@ -189,9 +181,17 @@ export const Registros = ({ navigation }: Props) => {
     ) {
       showAlert('Notificación del sistema', 'Todos los campos son obligatorios');
       return;
-    }
+     }//else if (Cedula.length < 8 ){
+    //   showAlert('Notificacion del sistema', 'Longitud de cedula incorrecta');
 
-    axios
+    // }
+    else if (Tarjeta.length < 16) {
+      showAlert('Notificacion del sistema', 'Longitud de tarjeta incorrecta');
+    }
+    else if (CVC.length < 3) {
+      showAlert('Notificacion del sistema', 'Longitud de codigo de seguridad incorrecto');
+    }else {
+      axios
       .post(
         'https://recordapi.azurewebsites.net/Recordatorio',
         {
@@ -214,9 +214,10 @@ export const Registros = ({ navigation }: Props) => {
         navigation.navigate('Home');
       })
       .catch(err => console.log(err));
+    }
+
+
   };
-
-
 
   // ============ Peticion a la API para obtener los datos de la BD=================
   const GetGestor = () => {
@@ -364,7 +365,7 @@ export const Registros = ({ navigation }: Props) => {
               <Input variant="underlined"
                 //style={styles.TextBox}
                 value={TxtTarjeta}
-                onChangeText={setTxtTarjeta}
+                onChangeText={Tarjeta}
                 inputMode='numeric'
                 id='Desarrollador'
                 size='xl'
@@ -381,7 +382,7 @@ export const Registros = ({ navigation }: Props) => {
               <Input variant="underlined"
                 //style={styles.TextBox}
                 value={TxtCVC}
-                onChangeText={setTxtCVC}
+                onChangeText={CVC}
                 inputMode='numeric'
                 id='Desarrollador'
                 size='xl'

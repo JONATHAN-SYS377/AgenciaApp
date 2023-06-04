@@ -27,18 +27,20 @@ export const styles = StyleSheet.create({
     borderColor: '#9A9A9A',
     borderWidth: 1,
     borderRadius: 10,
-    backgroundColor: '#f3f3f3',
+    backgroundColor:'transparent',
 
 
 
   },
   Imagenes: {
-    width: '100%',
+    marginLeft:20,
+    marginRight:20,
+    width: '90%',
     height: '60%',
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
+    borderRadius:10,
   },
   ViewTitulo: {
+    
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
@@ -55,7 +57,7 @@ export const styles = StyleSheet.create({
     paddingBottom: 10,
     fontSize: 20,
     top: 0,
-    color: '#535355',
+    color: '#fff',
     textAlign: 'left',
     fontFamily: 'Century Gotic',
     height: '100%',
@@ -69,7 +71,7 @@ export const styles = StyleSheet.create({
     paddingBottom: 10,
     fontSize: 20,
     top: 0,
-    color: '#535355',
+    color: '#fff',
     justifyContent: 'flex-start',
     textAlign: 'left',
     fontFamily: 'Century Gotic',
@@ -90,6 +92,7 @@ export const styles = StyleSheet.create({
     color: '#FFFFFF',
     textAlign:'center',
     justifyContent: 'center',
+    marginLeft:22,
   },
   fab1: {
     position: 'absolute',
@@ -343,5 +346,30 @@ export const styles = StyleSheet.create({
     resizeMode: 'cover',
     //justifyContent: 'center',
     //transform: [{ rotate: '0deg' }] // Girar la imagen 45 grados
+  },
+  menu:{
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    backgroundColor:"#84776F",
+  },
+  menu2:{
+  
+    paddingTop:5,
+    paddingLeft:15,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    backgroundColor:"#84776F",
+  },
+  menuBoton:{
+    backgroundColor:"#84776F",
+
+  },
+  boton:{
+    width: 70,
+    paddingBottom:5,
+    
+  },
+  boton1:{
+    
   },
 });

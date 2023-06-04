@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { Button as ButtonNative, TextInput,  Pressable,Alert, ScrollView, Image, ImageBackground } from 'react-native';
+import { Button as ButtonNative, TextInput, Pressable, Alert, ScrollView, Image, ImageBackground } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 import { FlatList } from 'react-native';
 import { styles } from '../Styles/styles';
@@ -16,6 +16,7 @@ import * as Animatable from 'react-native-animatable';
 interface Props extends StackScreenProps<any, any> { };
 export const Lista = ({ navigation }: Props) => {
 
+  //============   Creacion de la interface para almacenar datos ============   
   interface IUser {
     ID: string;
     CedulaCliente: string;
@@ -28,6 +29,7 @@ export const Lista = ({ navigation }: Props) => {
     CVC: string;
   }
 
+  //============   Todas las constances que utilzare para la APP =============
   const [txtId, SetTxtNumId] = useState('');
   const [txtCedula, SetTxtCedula] = useState('');
   const [txtNombreCliente, SetTxtNombreCliente] = useState('');
@@ -47,7 +49,7 @@ export const Lista = ({ navigation }: Props) => {
   const [TxtTarjeta, SetTxtTarjeta] = useState('');
   const [TxtCVC, SetTxtCVC] = useState('');
 
-
+  //============   metodo para el tamaño del modal =================
   const handleSizeClick = (newSize: React.SetStateAction<string>) => {
     setSize(newSize);
     setModalVisible(!modalVisible);
@@ -59,6 +61,7 @@ export const Lista = ({ navigation }: Props) => {
     SetTxtNumId(text);
   }
 
+  //============   metodo para validar los datos que se ingresan en la cedula =================
   const Cedula = (text: string) => {
     const numberRegex = /^[0-9]*$/
     if (numberRegex.test(text)) {
@@ -67,26 +70,22 @@ export const Lista = ({ navigation }: Props) => {
 
   }
 
+  //============   metodo para capturar  los datos de nombre =================
   const NombreCompleto = (text: string) => {
     SetTxtNombreCliente(text);
   }
 
-  const FechaReservacion = (text: string) => {
-    SetFechaReservacion(text);
-  }
-
-  const TipoBisi = (text: string) => {
-    SetTipoBisi(text);
-  }
-
+  //============   metodo para capturar el precio del paquete ==================
   const Precioo = (text: string) => {
     SetTxtPrecio(text);
-  }
+  };
+
+  //============   metodo para mostrar el DateTimePicker =================================
   const showDateTimePicker = () => {
     setShowDatePicker(true);
   };
 
-  // Limitar la longitud a 16 caracteres
+  //============  Limitar la longitud a 16 caracteres ============ 
   const Tarjeta = (text: string) => {
     const numberRegex = /^[0-9]*$/
     if (numberRegex.test(text)) {
@@ -108,10 +107,11 @@ export const Lista = ({ navigation }: Props) => {
     }
   };
 
+  //============   alerta para confirmar la eliminacion de un registro
   const ConfirmarEliminacion = (ID: string) => {
     Alert.alert(
       'Confirmación de eliminación',
-      'Estas Seguro que deseas eliminar este registro',
+      'Estas Seguro que deseas Cancelar el paquete que compraste',
       [
         { text: 'Eliminar', onPress: () => { Eliminar(ID) } },
         { text: 'Cancelar', onPress: () => console.log('Cancelar presionado') },
@@ -119,9 +119,10 @@ export const Lista = ({ navigation }: Props) => {
     );
   };
 
+  //============   Alert personalizado para mostrar mensajes ==================
   const showAlert = (title: string, message: string) => {
-    
-    Alert.alert  (
+
+    Alert.alert(
       title,
       message,
 
@@ -140,31 +141,6 @@ export const Lista = ({ navigation }: Props) => {
   };
 
   // =========== Metodo para asignar el valod de paquete al txt precio====================
-  // const handlePaqueteChange = (value: string) => {
-  //   SetCheckpaquete(value);
-
-  //   // Asignar valor al campo TxtPrecio según la selección
-  //   let precio = '';
-  //   let paquete = '';
-  //   if (value === 'La Ruta de Conquistadores') {
-  //     precio = '450';
-  //     paquete = 'La Ruta de Conquistadores';
-  //   } else if (value === 'Alpen Tour Trophy 2023') {
-  //     precio = '3 999';
-  //     paquete = 'La Alpen Tour Trophy 2023';
-  //   } else if (value === 'Bike TransAlp 2023') {
-  //     precio = '5 209';
-  //     paquete = 'Bike TransAlp 2023';
-  //   } else if (value === 'Camino de Santiago España') {
-  //     precio = '4 999';
-  //     paquete = 'Camino de Santiago España';
-  //   }
-  //   SetTxtPrecio(precio);
-  //   SetTipoBisi(paquete);
-  //   console.log(TxtTipoBisi,
-  //     TxtPrecio)
-
-  // };
   const handlePaqueteChange = (newValue: string) => {
     SetCheckpaquete(newValue);
     const selectedPackage = Packages.find((item) => item.value === newValue);
@@ -193,8 +169,8 @@ export const Lista = ({ navigation }: Props) => {
           `Para cambiar de paquete debes pagar una diferencia de $ ${difference} más.`,
           [
             { text: 'Cancelar', style: 'cancel' },
-            { text: 'Aceptar', onPress: () => SetTxtPrecio(selectedPackage.price)}
-            
+            { text: 'Aceptar', onPress: () => SetTxtPrecio(selectedPackage.price) }
+
           ]
         );
       }
@@ -206,15 +182,16 @@ export const Lista = ({ navigation }: Props) => {
           [
             { text: 'Cancelar', style: 'cancel' },
             { text: 'Aceptar', onPress: () => SetTxtPrecio(selectedPackage.price) }
-            
+
           ]
         );
 
       }
-      
+
     }
   };
 
+  //============   Lista de paquetes =================================
   const Packages = [
     { label: 'La Ruta de Conquistadores', value: 'La Ruta de Conquistadores', price: '450' },
     { label: 'Alpen Tour Trophy 2023', value: 'Alpen Tour Trophy 2023', price: '3 999' },
@@ -240,11 +217,12 @@ export const Lista = ({ navigation }: Props) => {
     SetTipoBisi('');
     SetTxtPrecio('');
     SetCheckpaquete('');
+    SetTxtTarjeta(''),
+      SetTxtCVC('');
   };
 
   // ==================== metodo para refrescar la lista ========
   const handleScroll = () => {
-    // Realiza cualquier lógica adicional aquí si es necesario
     GetGestor()
   };
 
@@ -268,7 +246,7 @@ export const Lista = ({ navigation }: Props) => {
     Tarjeta: string,
     CVC: string,
   ) => {
-    // Validar que todos los campos no estén vacíos
+    // Validar que todos los campos no estén vacíos y que cumplan con la longitud corresta de la tarjeta y cvc
     if (
       CedulaCliente.trim() === '' ||
       NombreCliente.trim() === '' ||
@@ -281,8 +259,13 @@ export const Lista = ({ navigation }: Props) => {
     ) {
       showAlert('Notificación del sistema', 'Todos los campos son obligatorios');
       return;
-      setModalVisible(true);
-    } else {
+      
+    } else if (Tarjeta.length < 16) {
+      showAlert('Notificacion del sistema', 'Longitud de tarjeta incorrecta');
+    }else if (CVC.length < 3) {
+      showAlert('Notificacion del sistema', 'Longitud de codigo de seguridad incorrecto');
+    }
+    else {
       axios.put(`https://recordapi.azurewebsites.net/Recordatorio/${ID}`, {
 
         CedulaCliente: CedulaCliente,
@@ -297,30 +280,38 @@ export const Lista = ({ navigation }: Props) => {
       },
         { headers: { 'Content-Type': 'application/json' } })
         .then(Response => {
-
+          setModalVisible(false)
           showAlert('Mensaje de Confirmacion', 'Actualizacion del paquete Exitoso');
           GetGestor()
           limpiarCampos()
-          setModalVisible(false)
+
 
         }).catch(err => console.log(err));
     }
 
 
   };
-  //--------  Peticion Delete para eliminar los datos de la BD --------
+  //--------  Peticion Delete para eliminar los datos de la BD mediante al ID --------
   const DeleteGestor = (ID: string) => {
+    showAlert('Notificacion de Reembolso',`Se te reembolsará en un lapso de 2 Dias maximo la cantidad de $ ${editData?.Precio} por motivo de la cancelación`)
+    
     axios.delete(`https://recordapi.azurewebsites.net/Recordatorio/${ID}`)
       .then(Res => {
+        
+        
         GetGestor();
+        handleirHome();
         console.log(Res.data)
       }).catch(err => console.log(err))
   }
 
+  //========== Inicializacion de la peticion GET ==============================
   useEffect(() => {
     GetGestor()
   }, [])
 
+
+  //========== Metodo para abrir el modal pasando por parametro el ID del paquete para actualizarlo 
   const openEditModal = (item: IUser) => {
     setEditData(item);
     setModalVisible(true);
@@ -336,14 +327,27 @@ export const Lista = ({ navigation }: Props) => {
 
   };
 
-  
+  //========== Metodo para ir al Screen Home =================================
+  const handleirHome = () => {
+    navigation.navigate('Home');
+  };
 
   return (
 
     <NativeBaseProvider>
-      <View backgroundColor={'#84776F'} width={'100%'}>
+      <View style={styles.menu2}>
+        <Button onPress={handleirHome} marginBottom={3} variant="solid" colorScheme={'primary'}>
+          ir a Home
+        </Button>
+
+      </View>
+      <View backgroundColor={'#84776F'} height={'auto'} paddingBottom={10}>
+
+
         <ImageBackground style={{ width: '100%', height: '100%' }} source={require("../Resource/20.png")} />
-        <View flex={1} position="absolute" top={0} bottom={0} left={0} right={0} w="100%" padding={2}>
+
+        <View flex={1} position="absolute" top={0} bottom={0} left={0} right={0} w="100%" h={"100%"} padding={2}>
+
           <FlatList
             data={Datosvalue}
             renderItem={({ item }) => (
@@ -370,7 +374,7 @@ export const Lista = ({ navigation }: Props) => {
             )}
             keyExtractor={(item) => item.ID}
           />
-          
+
 
 
           <Modal
@@ -511,7 +515,7 @@ export const Lista = ({ navigation }: Props) => {
                     <Text color={'black'} fontSize={'lg'} marginBottom={1} marginTop={3} >Precio del paquete seleccionado *</Text>
                     <Input variant="underlined"
                       //style={styles.TextBox}
-                      value={'$ '+TxtPrecio}
+                      value={'$ ' + TxtPrecio}
                       onChangeText={SetTxtPrecio}
                       inputMode='numeric'
                       id='Desarrollador'
@@ -568,7 +572,7 @@ export const Lista = ({ navigation }: Props) => {
                         CheckSexo,
                         selectedDateText,
                         Checkpaquete, // Utiliza el valor de Checkpaquete en lugar de TxtTipoBisi
-                        TxtPrecio.replace('$',''),
+                        TxtPrecio.replace('$', ''),
                         TxtTarjeta,
                         TxtCVC,
                       )
@@ -586,8 +590,9 @@ export const Lista = ({ navigation }: Props) => {
           </Modal>
 
         </View>
+
       </View>
-    </NativeBaseProvider>
+    </NativeBaseProvider >
 
 
   )
